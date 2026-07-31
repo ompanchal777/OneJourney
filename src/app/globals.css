@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   ONEJOURNEY V2.0 — EXACT DESIGN SYSTEM TOKENS
+   ============================================================ */
+
+:root {
+  /* ── Backgrounds ── */
+  --bg:            #FFFFFF;
+  --bg-soft:       #EAF4FF;
+  --bg-muted:      #f5f8ff;
+
+  /* ── Text ── */
+  --text-primary:   #0A2540;
+  --text-secondary: #5B6B7A;
+  --text-muted:     #8A94A6;
+
+  /* ── Accent ── */
+  --accent:         #0077FF;
+  --accent-hover:   #0066E0;
+  --accent-deep:    #0A2540;
+  --accent-soft:    #EAF4FF;
+
+  /* ── Borders ── */
+  --border-primary:   rgba(10, 37, 64, 0.08);
+  --border-secondary: rgba(10, 37, 64, 0.12);
+  --divider:          rgba(10, 37, 64, 0.06);
+
+  /* ── Shadows ── */
+  --shadow-card:      0 12px 40px rgba(10, 37, 64, 0.08);
+  --shadow-hover:     0 20px 60px rgba(10, 37, 64, 0.12);
+  --shadow-btn:       0 4px 20px rgba(0, 119, 255, 0.30);
+  --shadow-btn-hover: 0 4px 36px rgba(0, 119, 255, 0.50);
+
+  /* ── Glow ── */
+  --glow:             rgba(0, 119, 255, 0.18);
+  --glow-hero:        radial-gradient(circle, rgba(0,119,255,0.18) 0%, rgba(0,119,255,0.08) 45%, transparent 75%);
+  --glow-cta:         radial-gradient(circle, rgba(0,119,255,0.16) 0%, rgba(0,119,255,0.06) 50%, transparent 80%);
+
+  /* ── Semantic ── */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --error:   #EF4444;
+
+  /* ── Timeline ── */
+  --timeline-highlight: #0077FF;
+
+  /* ── Radius ── */
+  --radius-sm:   12px;
+  --radius-md:   16px;
+  --radius-lg:   20px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+}
+
+/* ============================================================
+   BASE RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #f0f7ff; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 119, 255, 0.28);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 119, 255, 0.50); }
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: rgba(0, 119, 255, 0.12);
+  color: #0A2540;
+}
+
+/* ============================================================
+   BREATHING GLOW KEYFRAMES
+   ============================================================ */
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.05); }
+}
+@keyframes breathe-slow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 0.9; transform: scale(1.08); }
+}
+@keyframes breathe-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.10); }
+}
+
+/* Cinematic intro — light particle float */
+@keyframes particle-float {
+  0%   { transform: translateY(0) translateX(0);      opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(-100px) translateX(30px); opacity: 0; }
+}
+@keyframes particle-float-alt {
+  0%   { transform: translateY(0) translateX(0);       opacity: 0; }
+  10%  { opacity: 0.9; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-80px) translateX(-40px); opacity: 0; }
+}
+
+/* Intro text animations */
+@keyframes intro-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .breathing-glow, .breathe-slow, .breathe-pulse { animation: none !important; }
+}
+
+/* ============================================================
+   DESIGN SYSTEM UTILITY LAYER
+   ============================================================ */
+@layer utilities {
+
+  /* ── Breathing glow ── */
+  .breathing-glow { animation: breathe      10s ease-in-out infinite; }
+  .breathe-slow   { animation: breathe-slow 13s ease-in-out infinite; }
+  .breathe-pulse  { animation: breathe-pulse 8s ease-in-out infinite; }
+
+  /* ── Text gradients ── */
+  .text-gradient {
+    background: linear-gradient(135deg, #0077FF 0%, #3399ff 60%, #0077FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-dark {
+    background: linear-gradient(180deg, #0A2540 0%, rgba(10,37,64,0.80) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── PRIMARY BUTTON ── */
+  .btn-primary {
+    background: #0077FF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+    box-shadow: var(--shadow-btn);
+  }
+  .btn-primary:hover {
+    background: #0066E0;
+    transform: scale(1.02);
+    box-shadow: var(--shadow-btn-hover);
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  /* ── SECONDARY BUTTON ── */
+  .btn-secondary {
+    background: #FFFFFF;
+    color: #0A2540;
+    border: 1px solid rgba(10,37,64,0.10);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .btn-secondary:hover {
+    background: #EAF4FF;
+    border-color: rgba(0,119,255,0.25);
+    transform: scale(1.01);
+  }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  /* ── CARD ── */
+  .card {
+    background: #FFFFFF;
+    border: 1px solid rgba(10,37,64,0.08);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.30s ease, transform 0.30s cubic-bezier(0.34,1.2,0.64,1);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-5px);
+  }
+
+  /* ── GLASS (light) ── */
+  .glass {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(10,37,64,0.08);
+  }
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(10,37,64,0.08);
+  }
+
+  /* ── BADGE ── */
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 13px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(0,119,255,0.20);
+    background: #EAF4FF;
+    color: #0077FF;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  /* ── ICON CHIP ── */
+  .icon-chip {
+    background: #EAF4FF;
+    border: 1px solid rgba(0,119,255,0.16);
+    color: #0077FF;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .icon-chip:hover {
+    background: rgba(0,119,255,0.12);
+    border-color: rgba(0,119,255,0.28);
+  }
+
+  /* ── DIVIDER ── */
+  .divider { border-color: rgba(10,37,64,0.06); }
+
+  /* ── GLOW ORB ── */
+  .glow-orb {
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+}
