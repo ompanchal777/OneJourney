@@ -82,7 +82,7 @@ export default function CTASection() {
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.6, delay: 0.5 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <motion.button onClick={openModal}
+              <motion.button onClick={() => openModal()}
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                 className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl text-sm font-semibold text-white overflow-hidden w-full sm:w-auto transition-all duration-300"
                 style={{

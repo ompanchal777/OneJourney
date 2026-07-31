@@ -125,7 +125,7 @@ export default function HeroSection() {
 
               {/* Secondary */}
               <motion.button
-                onClick={openModal}
+                onClick={() => openModal()}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 id="join-waitlist-btn"
