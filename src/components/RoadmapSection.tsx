@@ -118,7 +118,7 @@ export default function RoadmapSection() {
 
                         {/* Feature items */}
                         <ul className="space-y-2">
-                          {phase.items.map((item, i) => (
+                          {phase.items.map((item) => (
                             <li key={item} className="flex items-center gap-2.5 text-sm" style={{ color: "rgba(10,37,64,0.65)" }}>
                               {phase.active ? (
                                 <CheckCircle2 size={15} style={{ color: "#0077FF", flexShrink: 0 }} />

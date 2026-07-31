@@ -336,9 +336,7 @@ export async function sendWaitlistAdminNotification(
  *  - sendBetaInvitation(email, name)
  *  - sendNewsletter(emails, content)
  */
-export async function sendWelcomeEmail(
-  _submission: WaitlistSubmission
-): Promise<SendEmailResult> {
+export async function sendWelcomeEmail(): Promise<SendEmailResult> {
   // TODO: Implement welcome email to the user
   console.log("[emailService] sendWelcomeEmail — not yet implemented.");
   return { success: false, provider: "none", error: "Not implemented" };
