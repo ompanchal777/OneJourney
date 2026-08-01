@@ -63,7 +63,7 @@ function escapeCsvValue(val: string | undefined | null): string {
 function writeAll(submissions: WaitlistSubmission[]): void {
   try {
     ensureDataFile();
-    
+
     // 1. Write JSON
     const tmpJson = DATA_FILE + ".tmp";
     fs.writeFileSync(tmpJson, JSON.stringify(submissions, null, 2), "utf-8");
@@ -83,7 +83,7 @@ function writeAll(submissions: WaitlistSubmission[]): void {
       "Submitted On",
       "Source"
     ];
-    
+
     const rows = [headers.join(",")];
     for (const s of submissions) {
       const row = [
@@ -100,7 +100,7 @@ function writeAll(submissions: WaitlistSubmission[]): void {
       ];
       rows.push(row.join(","));
     }
-    
+
     const tmpCsv = csvPath + ".tmp";
     fs.writeFileSync(tmpCsv, rows.join("\n"), "utf-8");
     fs.renameSync(tmpCsv, csvPath);
