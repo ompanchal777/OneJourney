@@ -63,11 +63,11 @@ export function useWaitlistModal() {
 }
 
 const INTERESTS = [
-  { id: "peer", label: "📚 Peer-to-Peer Learning" },
-  { id: "ai", label: "🤖 AI Study Assistant" },
-  { id: "communities", label: "👥 Learning Communities" },
-  { id: "personalized", label: "🎯 Personalized Learning" },
-  { id: "global", label: "🌍 Global Student Network" },
+  { id: "peer", label: "Peer-to-Peer Learning" },
+  { id: "ai", label: "AI Study Assistant" },
+  { id: "communities", label: "Learning Communities" },
+  { id: "personalized", label: "Personalized Learning" },
+  { id: "global", label: "Global Student Network" },
 ];
 
 export default function WaitlistModal() {

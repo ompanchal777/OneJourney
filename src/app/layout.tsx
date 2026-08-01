@@ -25,6 +25,11 @@ export const metadata: Metadata = {
       "A serious EdTech platform powered by real-time collaboration and AI-guided peer learning.",
     type: "website",
   },
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

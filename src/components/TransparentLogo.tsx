@@ -9,7 +9,11 @@ interface TransparentLogoProps {
   alt?: string;
 }
 
-export default function TransparentLogo({ className = "", style = {}, alt = "OneJourney Logo" }: TransparentLogoProps) {
+export default function TransparentLogo({
+  className = "",
+  style = {},
+  alt = "OneJourney Logo",
+}: TransparentLogoProps) {
   const [logoSrc, setLogoSrc] = useState<string>("");
 
   useEffect(() => {
@@ -33,44 +37,40 @@ export default function TransparentLogo({ className = "", style = {}, alt = "One
           const g = data[i + 1];
           const b = data[i + 2];
 
-          // 1. Transparency detection:
-          // Background pixels are bright (max value > 210) and desaturated (low difference between channels)
           const maxVal = Math.max(r, g, b);
           const minVal = Math.min(r, g, b);
           const diff = maxVal - minVal;
 
           if (maxVal > 210 && diff < 20) {
-            data[i + 3] = 0; // Fully transparent
+            data[i + 3] = 0;
           } else if (maxVal > 180 && diff < 25) {
-            // Smooth transition for edges
             const factor = (255 - maxVal) / (255 - 180);
             data[i + 3] = Math.round(data[i + 3] * factor);
           } else {
-            // 2. Color shift to premium Sapphire Blue theme (#0077FF):
             const intensity = Math.max(g, b);
-            
-            data[i] = Math.round(r * 0.15);              // Red (low)
-            data[i + 1] = Math.round(intensity * 0.47);  // Green (approx 47%)
-            data[i + 2] = intensity;                     // Blue (full intensity)
+            data[i]     = Math.round(r * 0.15);
+            data[i + 1] = Math.round(intensity * 0.47);
+            data[i + 2] = intensity;
           }
         }
 
         ctx.putImageData(imgData, 0, 0);
         setLogoSrc(canvas.toDataURL("image/png"));
       } catch (e) {
-        console.error("Error processing logo transparency & color shift", e);
-        // Fallback to original image if anything goes wrong
+        console.error("TransparentLogo: canvas processing failed", e);
         setLogoSrc("/logo.png");
       }
     };
-    img.onerror = () => {
-      setLogoSrc("/logo.png");
-    };
+    img.onerror = () => setLogoSrc("/logo.png");
   }, []);
 
   if (!logoSrc) {
-    // Return a placeholder or render nothing until loaded to avoid layout shifts
-    return <div className={className} style={{ ...style, width: style.width, height: style.height }} />;
+    return (
+      <div
+        className={className}
+        style={{ ...style, width: style.width, height: style.height }}
+      />
+    );
   }
 
   return (
@@ -78,7 +78,10 @@ export default function TransparentLogo({ className = "", style = {}, alt = "One
       src={logoSrc}
       alt={alt}
       className={className}
-      style={style}
+      style={{
+        imageRendering: "high-quality" as React.CSSProperties["imageRendering"],
+        ...style,
+      }}
     />
   );
 }
