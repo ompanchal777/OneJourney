@@ -46,12 +46,8 @@ export default function TransparentLogo({
           } else if (maxVal > 180 && diff < 25) {
             const factor = (255 - maxVal) / (255 - 180);
             data[i + 3] = Math.round(data[i + 3] * factor);
-          } else {
-            const intensity = Math.max(g, b);
-            data[i]     = Math.round(r * 0.15);
-            data[i + 1] = Math.round(intensity * 0.47);
-            data[i + 2] = intensity;
           }
+          // Original colors are preserved (no color shifting)
         }
 
         ctx.putImageData(imgData, 0, 0);
