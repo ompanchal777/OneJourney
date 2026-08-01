@@ -23,11 +23,16 @@ const DATA_FILE = path.join(DATA_DIR, "waitlist.json");
 
 /** Ensure the data directory and file exist. */
 function ensureDataFile(): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2), "utf-8");
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(DATA_FILE)) {
+      fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2), "utf-8");
+    }
+  } catch (err) {
+    // If it's a read-only filesystem or similar, do not throw.
+    console.warn("[waitlistService] Directory/file initialization skipped (likely read-only filesystem):", err);
   }
 }
 
@@ -35,6 +40,9 @@ function ensureDataFile(): void {
 function readAll(): WaitlistSubmission[] {
   try {
     ensureDataFile();
+    if (!fs.existsSync(DATA_FILE)) {
+      return [];
+    }
     const raw = fs.readFileSync(DATA_FILE, "utf-8");
     return JSON.parse(raw) as WaitlistSubmission[];
   } catch {
@@ -44,11 +52,14 @@ function readAll(): WaitlistSubmission[] {
 
 /** Atomically write the full list back to disk. */
 function writeAll(submissions: WaitlistSubmission[]): void {
-  ensureDataFile();
-  // Write to a temp file first, then rename — prevents data corruption on crashes
-  const tmp = DATA_FILE + ".tmp";
-  fs.writeFileSync(tmp, JSON.stringify(submissions, null, 2), "utf-8");
-  fs.renameSync(tmp, DATA_FILE);
+  try {
+    ensureDataFile();
+    const tmp = DATA_FILE + ".tmp";
+    fs.writeFileSync(tmp, JSON.stringify(submissions, null, 2), "utf-8");
+    fs.renameSync(tmp, DATA_FILE);
+  } catch (err) {
+    console.warn("[waitlistService] Writing submission to local file skipped (likely read-only filesystem):", err);
+  }
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
