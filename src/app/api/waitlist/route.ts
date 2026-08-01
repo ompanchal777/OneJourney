@@ -38,6 +38,14 @@ function validatePayload(body: unknown): { valid: true; data: WaitlistPayload } 
     return { valid: false, error: "User role is required." };
   }
 
+  if (!b.collegeYear || typeof b.collegeYear !== "string") {
+    return { valid: false, error: "College Year is required." };
+  }
+
+  if (!b.university || typeof b.university !== "string") {
+    return { valid: false, error: "University is required." };
+  }
+
   if (!b.interest || typeof b.interest !== "string") {
     return { valid: false, error: "Interest selection is required." };
   }
@@ -51,6 +59,8 @@ function validatePayload(body: unknown): { valid: true; data: WaitlistPayload } 
       interest: b.interest as string,
       interestLabel: (b.interestLabel as string) || b.interest as string,
       message: typeof b.message === "string" ? b.message : "",
+      collegeYear: b.collegeYear as string,
+      university: b.university as string,
     },
   };
 }
@@ -102,6 +112,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<WaitlistA
     interest: payload.interest,
     interestLabel: payload.interestLabel,
     message: payload.message,
+    collegeYear: payload.collegeYear,
+    university: payload.university,
     submittedAt: new Date().toISOString(),
     source: "OneJourney Landing Page",
   };

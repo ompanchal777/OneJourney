@@ -50,15 +50,62 @@ function readAll(): WaitlistSubmission[] {
   }
 }
 
-/** Atomically write the full list back to disk. */
+function escapeCsvValue(val: string | undefined | null): string {
+  if (val === undefined || val === null) return '""';
+  const str = String(val);
+  if (/[",\r\n]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return `"${str}"`;
+}
+
+/** Atomically write the full list back to disk as both JSON and CSV (Excel). */
 function writeAll(submissions: WaitlistSubmission[]): void {
   try {
     ensureDataFile();
-    const tmp = DATA_FILE + ".tmp";
-    fs.writeFileSync(tmp, JSON.stringify(submissions, null, 2), "utf-8");
-    fs.renameSync(tmp, DATA_FILE);
+    
+    // 1. Write JSON
+    const tmpJson = DATA_FILE + ".tmp";
+    fs.writeFileSync(tmpJson, JSON.stringify(submissions, null, 2), "utf-8");
+    fs.renameSync(tmpJson, DATA_FILE);
+
+    // 2. Write CSV (Excel)
+    const csvPath = path.join(DATA_DIR, "waitlist.csv");
+    const headers = [
+      "ID",
+      "Name",
+      "Email",
+      "Role",
+      "College Year",
+      "University",
+      "Most Excited About",
+      "Message",
+      "Submitted On",
+      "Source"
+    ];
+    
+    const rows = [headers.join(",")];
+    for (const s of submissions) {
+      const row = [
+        escapeCsvValue(s.id),
+        escapeCsvValue(s.name),
+        escapeCsvValue(s.email),
+        escapeCsvValue(s.userType),
+        escapeCsvValue(s.collegeYear),
+        escapeCsvValue(s.university),
+        escapeCsvValue(s.interestLabel),
+        escapeCsvValue(s.message),
+        escapeCsvValue(s.submittedAt),
+        escapeCsvValue(s.source)
+      ];
+      rows.push(row.join(","));
+    }
+    
+    const tmpCsv = csvPath + ".tmp";
+    fs.writeFileSync(tmpCsv, rows.join("\n"), "utf-8");
+    fs.renameSync(tmpCsv, csvPath);
   } catch (err) {
-    console.warn("[waitlistService] Writing submission to local file skipped (likely read-only filesystem):", err);
+    console.warn("[waitlistService] Writing submissions skipped:", err);
   }
 }
 
@@ -82,6 +129,8 @@ export async function saveSubmission(payload: WaitlistPayload): Promise<string> 
     interest: payload.interest,
     interestLabel: payload.interestLabel,
     message: payload.message.trim(),
+    collegeYear: payload.collegeYear,
+    university: payload.university,
     submittedAt: now,
     source: "OneJourney Landing Page",
   };
@@ -125,4 +174,14 @@ export async function getSubmissionById(
 ): Promise<WaitlistSubmission | null> {
   const all = readAll();
   return all.find((s) => s.id === id) ?? null;
+}
+
+// Auto-sync existing JSON data to CSV on start-up
+try {
+  const existing = readAll();
+  if (existing.length > 0) {
+    writeAll(existing);
+  }
+} catch (err) {
+  console.warn("[waitlistService] Auto-sync to CSV on initialization failed:", err);
 }

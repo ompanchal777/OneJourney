@@ -47,7 +47,7 @@ function buildEmailBody(submission: WaitlistSubmission): {
     second: "2-digit",
   });
 
-  const text = `
+  let text = `
 A new user has joined the OneJourney waitlist.
 
 ────────────────────────────────────────────
@@ -60,24 +60,48 @@ ${submission.email}
 
 🎓 Role:
 ${submission.userType}
+`.trim();
 
-⭐ Most Excited About:
-${submission.interestLabel}
+  if (submission.collegeYear) {
+    text += `\n\n📅 College Year:\n${submission.collegeYear}`;
+  }
+  if (submission.university) {
+    text += `\n\n🏫 University:\n${submission.university}`;
+  }
 
-💬 Message:
-${submission.message || "(none)"}
+  text += `\n\n⭐ Most Excited About:\n${submission.interestLabel}
 
-🕒 Submitted On:
-${timestamp} (IST)
+💬 Message:\n${submission.message || "(none)"}
 
-🌐 Source:
-${submission.source}
+🕒 Submitted On:\n${timestamp} (IST)
 
-🔑 Submission ID:
-${submission.id}
+🌐 Source:\n${submission.source}
+
+🔑 Submission ID:\n${submission.id}
 
 ────────────────────────────────────────────
-`.trim();
+`;
+
+  const fields = [
+    ["👤 Full Name", submission.name],
+    ["📧 Email", `<a href="mailto:${submission.email}" style="color:#0077FF;text-decoration:none;">${submission.email}</a>`],
+    ["🎓 Role", submission.userType],
+  ];
+
+  if (submission.collegeYear) {
+    fields.push(["📅 College Year", submission.collegeYear]);
+  }
+  if (submission.university) {
+    fields.push(["🏫 University", submission.university]);
+  }
+
+  fields.push(
+    ["⭐ Most Excited About", submission.interestLabel],
+    ["💬 Message", submission.message || "<em style='color:#94a3b8;'>No message provided</em>"],
+    ["🕒 Submitted On", `${timestamp} (IST)`],
+    ["🌐 Source", submission.source],
+    ["🔑 Submission ID", `<code style="font-family:monospace;font-size:12px;background:#e8edf5;padding:2px 6px;border-radius:4px;">${submission.id}</code>`]
+  );
 
   const html = `
 <!DOCTYPE html>
@@ -132,16 +156,7 @@ ${submission.id}
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7faff;border-radius:14px;border:1px solid #e8edf5;">
                 <tr><td style="padding:24px;">
 
-                  ${[
-                    ["👤 Full Name", submission.name],
-                    ["📧 Email", `<a href="mailto:${submission.email}" style="color:#0077FF;text-decoration:none;">${submission.email}</a>`],
-                    ["🎓 Role", submission.userType],
-                    ["⭐ Most Excited About", submission.interestLabel],
-                    ["💬 Message", submission.message || "<em style='color:#94a3b8;'>No message provided</em>"],
-                    ["🕒 Submitted On", `${timestamp} (IST)`],
-                    ["🌐 Source", submission.source],
-                    ["🔑 Submission ID", `<code style="font-family:monospace;font-size:12px;background:#e8edf5;padding:2px 6px;border-radius:4px;">${submission.id}</code>`],
-                  ].map(([label, value]) => `
+                  ${fields.map(([label, value]) => `
                     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
                       <tr>
                         <td style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;padding-bottom:4px;">${label}</td>

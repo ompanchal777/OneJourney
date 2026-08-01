@@ -75,6 +75,8 @@ export default function WaitlistModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userType, setUserType] = useState("");
+  const [collegeYear, setCollegeYear] = useState("");
+  const [university, setUniversity] = useState("");
   const [selectedInterest, setSelectedInterest] = useState("");
   const [message, setMessage] = useState("");
   
@@ -101,6 +103,8 @@ export default function WaitlistModal() {
     setName("");
     setEmail("");
     setUserType("");
+    setCollegeYear("");
+    setUniversity("");
     setSelectedInterest("");
     setMessage("");
     setErrors({});
@@ -201,6 +205,16 @@ export default function WaitlistModal() {
       newErrors.userType = "Please select your role";
     }
 
+    if (userType === "Student") {
+      // Keep it optional if not a student, but let's make it always validated if you want
+    }
+    if (!collegeYear) {
+      newErrors.collegeYear = "Please select your college year";
+    }
+    if (!university) {
+      newErrors.university = "Please select your university";
+    }
+
     if (!selectedInterest) {
       newErrors.selectedInterest = "Please select what excites you most";
     }
@@ -224,6 +238,8 @@ export default function WaitlistModal() {
           name,
           email,
           userType,
+          collegeYear,
+          university,
           interest: selectedInterest,
           interestLabel: selectedInterestLabel,
           message,
@@ -404,6 +420,77 @@ export default function WaitlistModal() {
                       </div>
                       {errors.userType && (
                         <p className="text-xs text-red-500 mt-1 font-medium">{errors.userType}</p>
+                      )}
+                    </div>
+
+                    {/* College Year select */}
+                    <div>
+                      <label htmlFor="college-year-select" className="block text-xs font-semibold text-[#0A2540] uppercase tracking-wider mb-1.5">
+                        College Year <span className="text-[#0077FF]">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="college-year-select"
+                          value={collegeYear}
+                          onChange={(e) => {
+                            setCollegeYear(e.target.value);
+                            if (errors.collegeYear) setErrors({ ...errors, collegeYear: "" });
+                          }}
+                          className={`w-full px-4 py-3 rounded-xl text-sm text-[#0A2540] bg-white transition-all duration-200 border appearance-none cursor-pointer ${
+                            errors.collegeYear
+                              ? "border-red-400 focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.15)]"
+                              : "border-slate-200 focus:border-[#0077FF] focus:shadow-[0_0_0_3px_rgba(0,119,255,0.12)]"
+                          } placeholder:text-slate-300 focus:outline-none`}
+                        >
+                          <option value="" disabled hidden>Select your year</option>
+                          <option value="1st Year">1st Year</option>
+                          <option value="2nd Year">2nd Year</option>
+                          <option value="3rd Year">3rd Year</option>
+                          <option value="4th Year">4th Year</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center text-slate-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                      {errors.collegeYear && (
+                        <p className="text-xs text-red-500 mt-1 font-medium">{errors.collegeYear}</p>
+                      )}
+                    </div>
+
+                    {/* University select */}
+                    <div>
+                      <label htmlFor="university-select" className="block text-xs font-semibold text-[#0A2540] uppercase tracking-wider mb-1.5">
+                        University <span className="text-[#0077FF]">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="university-select"
+                          value={university}
+                          onChange={(e) => {
+                            setUniversity(e.target.value);
+                            if (errors.university) setErrors({ ...errors, university: "" });
+                          }}
+                          className={`w-full px-4 py-3 rounded-xl text-sm text-[#0A2540] bg-white transition-all duration-200 border appearance-none cursor-pointer ${
+                            errors.university
+                              ? "border-red-400 focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.15)]"
+                              : "border-slate-200 focus:border-[#0077FF] focus:shadow-[0_0_0_3px_rgba(0,119,255,0.12)]"
+                          } placeholder:text-slate-300 focus:outline-none`}
+                        >
+                          <option value="" disabled hidden>Select your university</option>
+                          <option value="GSFC University">GSFC University</option>
+                          <option value="Other University">Other University</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center text-slate-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                      {errors.university && (
+                        <p className="text-xs text-red-500 mt-1 font-medium">{errors.university}</p>
                       )}
                     </div>
 

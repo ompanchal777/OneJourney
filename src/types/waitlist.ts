@@ -30,6 +30,12 @@ export interface WaitlistSubmission {
 
   /** Source page identifier */
   source: string;
+
+  /** College Year (optional, students only) */
+  collegeYear?: string;
+
+  /** University (optional, students only) */
+  university?: string;
 }
 
 export interface EmailLog {
@@ -57,6 +63,8 @@ export interface WaitlistPayload {
   interest: string;
   interestLabel: string;
   message: string;
+  collegeYear?: string;
+  university?: string;
 }
 
 /** Response shape returned by /api/waitlist */
