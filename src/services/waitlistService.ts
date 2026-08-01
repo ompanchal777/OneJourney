@@ -152,6 +152,29 @@ export async function saveSubmission(payload: WaitlistPayload): Promise<string> 
   existing.push(submission);
   writeAll(existing);
 
+  // Sync to Google Sheet via webhook if configured
+  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+  if (webhookUrl) {
+    fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: submission.id,
+        name: submission.name,
+        email: submission.email,
+        userType: submission.userType,
+        collegeYear: submission.collegeYear || "",
+        university: submission.university || "",
+        interest: submission.interestLabel,
+        message: submission.message,
+        submittedAt: submission.submittedAt,
+        source: submission.source,
+      }),
+    }).catch((err) => {
+      console.error("[waitlistService] Google Sheet sync failed:", err);
+    });
+  }
+
   console.log(
     `[waitlistService] Saved submission id=${id} email=${submission.email}`
   );
