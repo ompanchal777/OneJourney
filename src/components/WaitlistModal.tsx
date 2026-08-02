@@ -232,6 +232,10 @@ export default function WaitlistModal() {
     const selectedInterestLabel =
       INTERESTS.find((i) => i.id === selectedInterest)?.label ?? selectedInterest;
 
+    // Provide default values so the backend doesn't reject the request
+    const payloadCollegeYear = collegeYear === "" ? "N/A" : collegeYear;
+    const payloadUniversity = university === "" ? "N/A" : university;
+
     try {
       const response = await fetch("/api/waitlist", {
         method: "POST",
@@ -240,8 +244,8 @@ export default function WaitlistModal() {
           name,
           email,
           userType,
-          collegeYear,
-          university,
+          collegeYear: payloadCollegeYear,
+          university: payloadUniversity,
           interest: selectedInterest,
           interestLabel: selectedInterestLabel,
           message,
